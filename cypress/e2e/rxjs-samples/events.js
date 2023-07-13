@@ -1,6 +1,7 @@
 import { fromEvent } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 describe('Test Observable Events', () => {
 	it('click event', () => {
@@ -23,7 +24,16 @@ describe('Test Observable Events', () => {
 		});
 	});
 
-	it.only('key down event', () => {
+	it.only('debouncetime test', () => {
+		cy.visit('cypress/html/index.html');
+		cy.get('.container').then($el => {
+			const clicks = fromEvent($el, 'mousemove');
+			const result = clicks.pipe(debounceTime(10000));
+			result.subscribe(x => console.log(x));
+		});
+	});
+
+	it('key down event', () => {
 		cy.visit('cypress/html/index.html');
 		cy.get('[name="firstname"]').then($el => {
 			const click$ = fromEvent($el, 'keydown');
